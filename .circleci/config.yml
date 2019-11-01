@@ -1,0 +1,78 @@
+version: 2.1
+
+executors:
+  buildpack:
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    working_directory: ~/repo
+
+jobs:
+  build-docker-image:
+    executor: buildpack
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build docker image
+          command: docker build -t gcloud-cli .
+      - run:
+          name: Check kubectl
+          command: docker run -it gcloud-cli "which" "kubectl"
+      - run:
+          name: Check gcloud
+          command: docker run -it gcloud-cli "gcloud" "--version"
+      - run:
+          name: Check all versions
+          command: |
+            docker run -it gcloud-cli "gcloud"  "--version"
+            echo "[kubectl] "$(docker run -it gcloud-cli "kubectl"  "version" | head -n 1)
+            echo "[python3] "$(docker run -it gcloud-cli "python3"  "--version" | head -n 1)
+            echo "[curl] "$(docker run -it gcloud-cli "curl" "--version" | head -n 1)
+            echo "[git] "$(docker run -it gcloud-cli "git" "--version" | head -n 1)
+            echo "[docker] "$(docker run -it gcloud-cli "docker" "--version" | head -n 1)
+            echo "[jq] "$(docker run -it gcloud-cli "jq" "--version" | head -n 1)
+            echo "[ytt] "$(docker run -it gcloud-cli "ytt" "--version" | head -n 1)
+            echo "[psql] "$(docker run -it gcloud-cli "psql" "--version" | head -n 1)
+
+  publish-latest-docker-image:
+    executor: buildpack
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build docker image
+          command: |
+            docker build --target gcloud_cli -t "aegirops/gcloud-cli:latest" -t "aegirops/gcloud-cli:${CIRCLE_TAG}" . --no-cache
+            docker build --target gcloud_cli_nodejs_14 -t "aegirops/gcloud-cli:latest-node14" -t "aegirops/gcloud-cli:${CIRCLE_TAG}-node14" .
+            docker build --target gcloud_cli_nodejs_16 -t "aegirops/gcloud-cli:latest-node16" -t "aegirops/gcloud-cli:${CIRCLE_TAG}-node16" .
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push aegirops/gcloud-cli:latest
+            docker push aegirops/gcloud-cli:${CIRCLE_TAG}
+            docker push aegirops/gcloud-cli:latest-node14
+            docker push aegirops/gcloud-cli:${CIRCLE_TAG}-node14
+            docker push aegirops/gcloud-cli:latest-node16
+            docker push aegirops/gcloud-cli:${CIRCLE_TAG}-node16
+
+workflows:
+  build-test:
+    jobs:
+      - build-docker-image:
+          filters:
+            branches:
+              only:
+                - /.*/
+
+  publish:
+    jobs:
+      - publish-latest-docker-image:
+          context: dockerGcloudCli
+          filters:
+            branches:
+              ignore:
+                - /.*/
+            tags:
+              only:
+                - /^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
