@@ -29,6 +29,12 @@ RUN apt-get install -y \
     docker-ce-cli \
     google-cloud-sdk
 
+# Install postgresql
+RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
+RUN sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+RUN sudo apt-get update -y
+RUN sudo apt-get install postgresql-client-11 -y
+
 # Add new user ci and set sudo without password
 RUN adduser --disabled-password --gecos "" ci
 RUN echo "ci     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
