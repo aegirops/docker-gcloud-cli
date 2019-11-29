@@ -15,6 +15,7 @@ This image is based on debian stretch slim and contains:
  - Docker cli
  - Jq
  - ytt
+ - postgresql-client-11
 
 This image is intended to be used in a gke CI/CD environment.
 
