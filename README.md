@@ -16,6 +16,7 @@ This image is based on debian stretch slim and contains:
  - Jq
  - ytt
  - postgresql-client-11
+ - nslookup
 
 This image is intended to be used in a gke CI/CD environment.
 
