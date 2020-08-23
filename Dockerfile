@@ -28,7 +28,8 @@ RUN apt-get install -y \
     gettext-base \
     jq \
     docker-ce-cli \
-    google-cloud-sdk
+    google-cloud-sdk \
+    net-tools
 
 # Install postgresql
 RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
