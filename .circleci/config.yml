@@ -17,10 +17,22 @@ jobs:
           command: docker build -t gcloud-cli .
       - run:
           name: Check kubectl
-          command:  docker run -it gcloud-cli "which" "kubectl"
+          command: docker run -it gcloud-cli "which" "kubectl"
       - run:
           name: Check gcloud
-          command:  docker run -it gcloud-cli "gcloud" "--version"    
+          command: docker run -it gcloud-cli "gcloud" "--version"
+      - run:
+          name: Check all versions
+          command: |
+            docker run -it test "gcloud"  "--version"
+            echo "[kubectl] "$(docker run -it gcloud-cli "kubectl"  "version" | head -n 1)
+            echo "[python3] "$(docker run -it gcloud-cli "python3"  "--version" | head -n 1)
+            echo "[curl] "$(docker run -it gcloud-cli "curl" "--version" | head -n 1)
+            echo "[git] "$(docker run -it gcloud-cli "git" "--version" | head -n 1)
+            echo "[docker] "$(docker run -it gcloud-cli "docker" "--version" | head -n 1)
+            echo "[jq] "$(docker run -it gcloud-cli "jq" "--version" | head -n 1)
+            echo "[ytt] "$(docker run -it gcloud-cli "ytt" "--version" | head -n 1)
+            echo "[psql] "$(docker run -it gcloud-cli "psql" "--version" | head -n 1)
 
   publish-latest-docker-image:
     executor: buildpack
@@ -48,7 +60,7 @@ workflows:
                 - /.*/
 
   publish:
-    jobs:  
+    jobs:
       - publish-latest-docker-image:
           context: dockerGcloudCli
           filters:
