@@ -24,7 +24,7 @@ jobs:
       - run:
           name: Check all versions
           command: |
-            docker run -it test "gcloud"  "--version"
+            docker run -it gcloud-cli "gcloud"  "--version"
             echo "[kubectl] "$(docker run -it gcloud-cli "kubectl"  "version" | head -n 1)
             echo "[python3] "$(docker run -it gcloud-cli "python3"  "--version" | head -n 1)
             echo "[curl] "$(docker run -it gcloud-cli "curl" "--version" | head -n 1)
