@@ -7,20 +7,22 @@
 Docker with gcloud cli and kubectl for CI/CD purpose
 
 This image is based on debian stretch slim and contains:
- - Gcloud sdk
- - Python 2.7 
- - Kubectl
- - Curl
- - Git
- - Docker cli
- - Jq
- - ytt
- - postgresql-client-11
- - nslookup
+
+- Gcloud sdk
+- Python 3.5
+- Kubectl
+- Curl
+- Git
+- Docker cli
+- Jq
+- ytt
+- postgresql-client-11
+- nslookup
 
 This image is intended to be used in a gke CI/CD environment.
 
- ## DockerHub
+## DockerHub
 
 Available publicly on:
- - https://hub.docker.com/r/aegirops/gcloud-cli
+
+- https://hub.docker.com/r/aegirops/gcloud-cli
