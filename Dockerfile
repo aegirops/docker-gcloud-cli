@@ -58,8 +58,10 @@ CMD ["bash"]
 
 FROM gcloud_cli AS gcloud_cli_nodejs_14
 
-# Install node from linux binaries
+# Use root user
 USER root
+
+# Install node from linux binaries
 
 COPY src/nodejs/node-v14.18.1-linux-x64.tar.xz /tmp/node.tar.xz
 
@@ -73,7 +75,5 @@ RUN rm -f /tmp/node.tar.xz
 
 RUN node -v
 
-# Use ci user and run bash
-USER ci
-
+# run bash
 CMD ["bash"]
