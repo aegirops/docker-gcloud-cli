@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM debian:buster-slim AS gcloud_cli
 
 # Install curl and gnupg2
 RUN apt-get update -y
@@ -50,6 +50,28 @@ RUN wget --quiet -O- https://k14s.io/install.sh | bash
 
 # Cleanup
 RUN apt-get clean -y
+
+# Use ci user and run bash
+USER ci
+
+CMD ["bash"]
+
+FROM gcloud_cli AS gcloud_cli_nodejs_14
+
+# Install node from linux binaries
+USER root
+
+COPY src/nodejs/node-v14.18.1-linux-x64.tar.xz /tmp/node.tar.xz
+
+RUN tar -xf /tmp/node.tar.xz -C /tmp
+
+RUN cp -r /tmp/node-v14.18.1-linux-x64/lib/*  /lib/.
+
+RUN cp -r /tmp/node-v14.18.1-linux-x64/bin/*  /bin/.
+
+RUN rm -f /tmp/node.tar.xz
+
+RUN node -v
 
 # Use ci user and run bash
 USER ci

@@ -18,12 +18,13 @@ This image is based on debian buster slim and contains:
 - ytt
 - postgresql-client-11
 - nslookup
-- 
 
 This image is intended to be used in a gke CI/CD environment.
 
+A second flavor is available containing also nodejs 14.
 ## DockerHub
 
 Available publicly on:
 
 - https://hub.docker.com/r/aegirops/gcloud-cli
+
