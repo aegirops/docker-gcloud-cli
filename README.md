@@ -18,6 +18,7 @@ This image is based on debian buster slim and contains:
 - ytt 0.30
 - postgresql-client-11
 - nslookup
+- s3cmd
 
 This image is intended to be used in a gke CI/CD environment.
 
