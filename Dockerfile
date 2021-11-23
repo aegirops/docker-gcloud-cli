@@ -29,7 +29,9 @@ RUN apt-get install -y \
     jq \
     docker-ce-cli \
     google-cloud-sdk \
-    net-tools
+    net-tools \
+    python3 \
+    python3-pip
 
 # Install postgresql
 RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
@@ -47,6 +49,9 @@ RUN curl -o /usr/local/bin/kubectl -LO https://storage.googleapis.com/kubernetes
 
 # Install ytt yaml templating tool
 RUN wget --quiet -O- https://k14s.io/install.sh | bash
+
+# Install s3cmd
+RUN pip3 install s3cmd
 
 # Cleanup
 RUN apt-get clean -y
