@@ -1,4 +1,4 @@
-FROM debian:buster-slim AS gcloud_cli
+FROM debian:bullseye-slim AS gcloud_cli
 
 # Install curl and gnupg2
 RUN apt-get update -y
@@ -15,7 +15,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 
 # Add docker apt repository
-RUN echo "deb [arch=amd64] https://download.docker.com/linux/debian buster stable" >> /etc/apt/sources.list \
+RUN echo "deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable" >> /etc/apt/sources.list \
     && curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 
 # Install dependencies
@@ -31,11 +31,12 @@ RUN apt-get install -y \
     google-cloud-sdk \
     net-tools \
     python3 \
-    python3-pip
+    python3-pip \
+    python3-magic
 
 # Install postgresql
 RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
-RUN sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+RUN sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ bullseye-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
 RUN sudo apt-get update -y
 RUN sudo apt-get install postgresql-client-11 -y
 
@@ -48,8 +49,8 @@ RUN curl -o /usr/local/bin/kubectl -LO https://storage.googleapis.com/kubernetes
     && chmod +x /usr/local/bin/kubectl
 
 # Install ytt yaml templating tool
-RUN wget --quiet -O- https://k14s.io/install.sh | bash
-
+RUN curl -o /usr/local/bin/ytt -LO https://github.com/vmware-tanzu/carvel-ytt/releases/download/v0.40.1/ytt-linux-amd64 \
+    && chmod +x /usr/local/bin/ytt
 # Install s3cmd
 RUN pip3 install s3cmd
 
@@ -67,14 +68,32 @@ FROM gcloud_cli AS gcloud_cli_nodejs_14
 USER root
 
 # Install node from linux binaries
-
-COPY src/nodejs/node-v14.18.1-linux-x64.tar.xz /tmp/node.tar.xz
+COPY src/nodejs/node-v14.19.1-linux-x64.tar.xz /tmp/node.tar.xz
 
 RUN tar -xf /tmp/node.tar.xz -C /tmp
 
-RUN cp -r /tmp/node-v14.18.1-linux-x64/lib/*  /lib/.
+RUN cp -r /tmp/node-v14.19.1-linux-x64/lib/*  /lib/.
 
-RUN cp -r /tmp/node-v14.18.1-linux-x64/bin/*  /bin/.
+RUN cp -r /tmp/node-v14.19.1-linux-x64/bin/*  /bin/.
+
+RUN rm -f /tmp/node.tar.xz
+
+RUN node -v
+
+FROM gcloud_cli AS gcloud_cli_nodejs_16
+
+# Use root user
+USER root
+
+# Install node from linux binaries
+
+COPY src/nodejs/node-v16.15.0-linux-x64.tar.xz /tmp/node.tar.xz
+
+RUN tar -xf /tmp/node.tar.xz -C /tmp
+
+RUN cp -r /tmp/node-v16.15.0-linux-x64/lib/*  /lib/.
+
+RUN cp -r /tmp/node-v16.15.0-linux-x64/bin/*  /bin/.
 
 RUN rm -f /tmp/node.tar.xz
 
