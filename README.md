@@ -22,7 +22,7 @@ This image is based on debian buster slim and contains:
 
 This image is intended to be used in a gke CI/CD environment.
 
-A second flavor is available containing also nodejs 14.
+Other flavors are available containing nodejs 14 or nodejs 16.
 ## DockerHub
 
 Available publicly on:
