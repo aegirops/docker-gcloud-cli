@@ -9,13 +9,14 @@ Docker with gcloud cli and kubectl for CI/CD purpose
 This image is based on debian buster slim and contains:
 
 - Gcloud sdk
+- Gcloud sdk: gke-gcloud-auth-plugin
 - Python 3.7
 - Kubectl
 - Curl
 - Git
 - Docker cli
 - Jq
-- ytt 0.30
+- ytt v0.41.1
 - postgresql-client-11
 - nslookup
 - s3cmd
