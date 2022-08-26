@@ -28,6 +28,7 @@ RUN apt-get install -y \
     gettext-base \
     jq \
     docker-ce-cli \
+    docker-compose-plugin \
     google-cloud-sdk \
     google-cloud-sdk-gke-gcloud-auth-plugin \
     net-tools \

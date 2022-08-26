@@ -15,6 +15,7 @@ This image is based on debian buster slim and contains:
 - Curl
 - Git
 - Docker cli
+- Docker compose cli
 - Jq
 - ytt v0.41.1
 - postgresql-client-11
