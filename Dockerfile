@@ -40,7 +40,7 @@ RUN apt-get install -y \
 RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
 RUN sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ bullseye-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
 RUN sudo apt-get update -y
-RUN sudo apt-get install postgresql-client-12 -y
+RUN sudo apt-get install postgresql-client-14 -y
 
 # Add new user ci and set sudo without password
 RUN adduser --disabled-password --gecos "" ci
@@ -51,7 +51,7 @@ RUN curl -o /usr/local/bin/kubectl -LO https://storage.googleapis.com/kubernetes
     && chmod +x /usr/local/bin/kubectl
 
 # Install ytt yaml templating tool
-RUN curl -o /usr/local/bin/ytt -LO https://github.com/vmware-tanzu/carvel-ytt/releases/download/v0.41.1/ytt-linux-amd64 \
+RUN curl -o /usr/local/bin/ytt -LO https://github.com/vmware-tanzu/carvel-ytt/releases/download/v0.43.0/ytt-linux-amd64 \
     && chmod +x /usr/local/bin/ytt
 # Install s3cmd
 RUN pip3 install s3cmd
@@ -70,13 +70,13 @@ FROM gcloud_cli AS gcloud_cli_nodejs_14
 USER root
 
 # Install node from linux binaries
-COPY src/nodejs/node-v14.20.0-linux-x64.tar.xz /tmp/node.tar.xz
+COPY src/nodejs/node-v14.21.1-linux-x64.tar.xz /tmp/node.tar.xz
 
 RUN tar -xf /tmp/node.tar.xz -C /tmp
 
-RUN cp -r /tmp/node-v14.20.0-linux-x64/lib/*  /lib/.
+RUN cp -r /tmp/node-v14.21.1-linux-x64/lib/*  /lib/.
 
-RUN cp -r /tmp/node-v14.20.0-linux-x64/bin/*  /bin/.
+RUN cp -r /tmp/node-v14.21.1-linux-x64/bin/*  /bin/.
 
 RUN rm -f /tmp/node.tar.xz
 
@@ -89,13 +89,13 @@ USER root
 
 # Install node from linux binaries
 
-COPY src/nodejs/node-v16.16.0-linux-x64.tar.xz /tmp/node.tar.xz
+COPY src/nodejs/node-v16.18.1-linux-x64.tar.xz /tmp/node.tar.xz
 
 RUN tar -xf /tmp/node.tar.xz -C /tmp
 
-RUN cp -r /tmp/node-v16.16.0-linux-x64/lib/*  /lib/.
+RUN cp -r /tmp/node-v16.18.1-linux-x64/lib/*  /lib/.
 
-RUN cp -r /tmp/node-v16.16.0-linux-x64/bin/*  /bin/.
+RUN cp -r /tmp/node-v16.18.1-linux-x64/bin/*  /bin/.
 
 RUN rm -f /tmp/node.tar.xz
 
