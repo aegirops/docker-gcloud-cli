@@ -10,21 +10,21 @@ This image is based on debian buster slim and contains:
 
 - Gcloud sdk
 - Gcloud sdk: gke-gcloud-auth-plugin
-- Python 3.7
+- Python 3.9.2
 - Kubectl
 - Curl
 - Git
 - Docker cli
 - Docker compose cli
 - Jq
-- ytt v0.43.0
-- postgresql-client-14
+- ytt v0.45.0
+- postgresql-client-15
 - nslookup
 - s3cmd
 
 This image is intended to be used in a gke CI/CD environment.
 
-Other flavors are available containing nodejs 14 or nodejs 16.
+Other flavors are available containing nodejs 14, 16 or 18.
 
 ## DockerHub
 

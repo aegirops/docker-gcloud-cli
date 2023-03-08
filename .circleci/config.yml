@@ -45,6 +45,7 @@ jobs:
             docker build --target gcloud_cli -t "aegirops/gcloud-cli:latest" -t "aegirops/gcloud-cli:${CIRCLE_TAG}" . --no-cache
             docker build --target gcloud_cli_nodejs_14 -t "aegirops/gcloud-cli:latest-node14" -t "aegirops/gcloud-cli:${CIRCLE_TAG}-node14" .
             docker build --target gcloud_cli_nodejs_16 -t "aegirops/gcloud-cli:latest-node16" -t "aegirops/gcloud-cli:${CIRCLE_TAG}-node16" .
+            docker build --target gcloud_cli_nodejs_18 -t "aegirops/gcloud-cli:latest-node18" -t "aegirops/gcloud-cli:${CIRCLE_TAG}-node18" .
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
@@ -55,6 +56,8 @@ jobs:
             docker push aegirops/gcloud-cli:${CIRCLE_TAG}-node14
             docker push aegirops/gcloud-cli:latest-node16
             docker push aegirops/gcloud-cli:${CIRCLE_TAG}-node16
+            docker push aegirops/gcloud-cli:latest-node18
+            docker push aegirops/gcloud-cli:${CIRCLE_TAG}-node18
 
 workflows:
   build-test:
