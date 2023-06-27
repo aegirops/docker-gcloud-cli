@@ -17,7 +17,7 @@ This image is based on debian buster slim and contains:
 - Docker cli
 - Docker compose cli
 - Jq
-- ytt v0.45.0
+- ytt v0.45.3
 - postgresql-client-15
 - nslookup
 - s3cmd

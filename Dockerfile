@@ -51,7 +51,7 @@ RUN curl -o /usr/local/bin/kubectl -LO https://storage.googleapis.com/kubernetes
     && chmod +x /usr/local/bin/kubectl
 
 # Install ytt yaml templating tool
-RUN curl -o /usr/local/bin/ytt -LO https://github.com/vmware-tanzu/carvel-ytt/releases/download/v0.45.0/ytt-linux-amd64 \
+RUN curl -o /usr/local/bin/ytt -LO https://github.com/vmware-tanzu/carvel-ytt/releases/download/v0.45.3/ytt-linux-amd64 \
     && chmod +x /usr/local/bin/ytt
 # Install s3cmd
 RUN pip3 install s3cmd
@@ -89,13 +89,13 @@ USER root
 
 # Install node from linux binaries
 
-RUN curl -o /tmp/node.tar.xz -LO https://nodejs.org/dist/v16.19.1/node-v16.19.1-linux-x64.tar.xz
+RUN curl -o /tmp/node.tar.xz -LO https://nodejs.org/dist/v16.20.1/node-v16.20.1-linux-x64.tar.xz
 
 RUN tar -xf /tmp/node.tar.xz -C /tmp
 
-RUN cp -r /tmp/node-v16.19.1-linux-x64/lib/*  /lib/.
+RUN cp -r /tmp/node-v16.20.1-linux-x64/lib/*  /lib/.
 
-RUN cp -r /tmp/node-v16.19.1-linux-x64/bin/*  /bin/.
+RUN cp -r /tmp/node-v16.20.1-linux-x64/bin/*  /bin/.
 
 RUN rm -f /tmp/node.tar.xz
 
@@ -108,13 +108,13 @@ USER root
 
 # Install node from linux binaries
 
-RUN curl -o /tmp/node.tar.xz -LO https://nodejs.org/dist/v18.15.0/node-v18.15.0-linux-x64.tar.xz
+RUN curl -o /tmp/node.tar.xz -LO https://nodejs.org/dist/v18.16.1/node-v18.16.1-linux-x64.tar.xz
 
 RUN tar -xf /tmp/node.tar.xz -C /tmp
 
-RUN cp -r /tmp/node-v18.15.0-linux-x64/lib/*  /lib/.
+RUN cp -r /tmp/node-v18.16.1-linux-x64/lib/*  /lib/.
 
-RUN cp -r /tmp/node-v18.15.0-linux-x64/bin/*  /bin/.
+RUN cp -r /tmp/node-v18.16.1-linux-x64/bin/*  /bin/.
 
 RUN rm -f /tmp/node.tar.xz
 
