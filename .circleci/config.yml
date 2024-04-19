@@ -43,21 +43,18 @@ jobs:
           name: Build docker image
           command: |
             docker build --target gcloud_cli -t "aegirops/gcloud-cli:latest" -t "aegirops/gcloud-cli:${CIRCLE_TAG}" . --no-cache
-            docker build --target gcloud_cli_nodejs_14 -t "aegirops/gcloud-cli:latest-node14" -t "aegirops/gcloud-cli:${CIRCLE_TAG}-node14" .
-            docker build --target gcloud_cli_nodejs_16 -t "aegirops/gcloud-cli:latest-node16" -t "aegirops/gcloud-cli:${CIRCLE_TAG}-node16" .
             docker build --target gcloud_cli_nodejs_18 -t "aegirops/gcloud-cli:latest-node18" -t "aegirops/gcloud-cli:${CIRCLE_TAG}-node18" .
+            docker build --target gcloud_cli_nodejs_20 -t "aegirops/gcloud-cli:latest-node20" -t "aegirops/gcloud-cli:${CIRCLE_TAG}-node20" .
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push aegirops/gcloud-cli:latest
             docker push aegirops/gcloud-cli:${CIRCLE_TAG}
-            docker push aegirops/gcloud-cli:latest-node14
-            docker push aegirops/gcloud-cli:${CIRCLE_TAG}-node14
-            docker push aegirops/gcloud-cli:latest-node16
-            docker push aegirops/gcloud-cli:${CIRCLE_TAG}-node16
             docker push aegirops/gcloud-cli:latest-node18
             docker push aegirops/gcloud-cli:${CIRCLE_TAG}-node18
+            docker push aegirops/gcloud-cli:latest-node20
+            docker push aegirops/gcloud-cli:${CIRCLE_TAG}-node20
 
 workflows:
   build-test:

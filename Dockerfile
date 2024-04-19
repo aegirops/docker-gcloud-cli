@@ -1,7 +1,12 @@
-FROM debian:bullseye-slim AS gcloud_cli
+FROM --platform=linux/amd64 debian:bookworm-slim AS gcloud_cli
 
-# Install curl and gnupg2
+# Update
 RUN apt-get update -y
+
+# Install ca-certificates
+RUN apt-get install -y ca-certificates
+
+# Install utils
 RUN apt-get install -y \
     curl \
     gnupg2 \
@@ -12,11 +17,15 @@ RUN apt-get install -y \
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 
 # Import the Google Cloud Platform public key
-RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
 
 # Add docker apt repository
-RUN echo "deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable" >> /etc/apt/sources.list \
+RUN echo "deb [arch=amd64] https://download.docker.com/linux/debian bookworm stable" >> /etc/apt/sources.list \
     && curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+
+# Add helm repository
+RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" >> /etc/apt/sources.list \
+    && curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null
 
 # Install dependencies
 RUN apt-get update -y
@@ -27,14 +36,15 @@ RUN apt-get install -y \
     git \
     gettext-base \
     jq \
-    docker-ce-cli \
     docker-compose-plugin \
-    google-cloud-sdk \
-    google-cloud-sdk-gke-gcloud-auth-plugin \
+    google-cloud-cli \
+    google-cloud-cli-gke-gcloud-auth-plugin \
     net-tools \
     python3 \
     python3-pip \
-    python3-magic
+    python3-magic \
+    docker-ce-cli \
+    docker-compose-plugin
 
 # Install postgresql
 RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
@@ -51,8 +61,9 @@ RUN curl -o /usr/local/bin/kubectl -LO https://storage.googleapis.com/kubernetes
     && chmod +x /usr/local/bin/kubectl
 
 # Install ytt yaml templating tool
-RUN curl -o /usr/local/bin/ytt -LO https://github.com/vmware-tanzu/carvel-ytt/releases/download/v0.45.3/ytt-linux-amd64 \
+RUN curl -o /usr/local/bin/ytt -LO https://github.com/vmware-tanzu/carvel-ytt/releases/download/v0.49.0/ytt-linux-amd64 \
     && chmod +x /usr/local/bin/ytt
+
 # Install s3cmd
 RUN pip3 install s3cmd
 
@@ -64,57 +75,37 @@ USER ci
 
 CMD ["bash"]
 
-FROM gcloud_cli AS gcloud_cli_nodejs_14
-
-# Use root user
-USER root
-
-# Install node from linux binaries
-RUN curl -o /tmp/node.tar.xz -LO https://nodejs.org/dist/v14.21.3/node-v14.21.3-linux-x64.tar.xz
-
-RUN tar -xf /tmp/node.tar.xz -C /tmp
-
-RUN cp -r /tmp/node-v14.21.3-linux-x64/lib/*  /lib/.
-
-RUN cp -r /tmp/node-v14.21.3-linux-x64/bin/*  /bin/.
-
-RUN rm -f /tmp/node.tar.xz
-
-RUN node -v
-
-FROM gcloud_cli AS gcloud_cli_nodejs_16
-
-# Use root user
-USER root
-
-# Install node from linux binaries
-
-RUN curl -o /tmp/node.tar.xz -LO https://nodejs.org/dist/v16.20.1/node-v16.20.1-linux-x64.tar.xz
-
-RUN tar -xf /tmp/node.tar.xz -C /tmp
-
-RUN cp -r /tmp/node-v16.20.1-linux-x64/lib/*  /lib/.
-
-RUN cp -r /tmp/node-v16.20.1-linux-x64/bin/*  /bin/.
-
-RUN rm -f /tmp/node.tar.xz
-
-RUN node -v
-
 FROM gcloud_cli AS gcloud_cli_nodejs_18
 
 # Use root user
 USER root
 
 # Install node from linux binaries
-
-RUN curl -o /tmp/node.tar.xz -LO https://nodejs.org/dist/v18.16.1/node-v18.16.1-linux-x64.tar.xz
+RUN curl -o /tmp/node.tar.xz -LO https://nodejs.org/dist/v18.20.2/node-v18.20.2-linux-x64.tar.xz
 
 RUN tar -xf /tmp/node.tar.xz -C /tmp
 
-RUN cp -r /tmp/node-v18.16.1-linux-x64/lib/*  /lib/.
+RUN cp -r /tmp/node-v18.20.2-linux-x64/lib/*  /lib/.
 
-RUN cp -r /tmp/node-v18.16.1-linux-x64/bin/*  /bin/.
+RUN cp -r /tmp/node-v18.20.2-linux-x64/bin/*  /bin/.
+
+RUN rm -f /tmp/node.tar.xz
+
+RUN node -v
+
+FROM gcloud_cli AS gcloud_cli_nodejs_20
+
+# Use root user
+USER root
+
+# Install node from linux binaries
+RUN curl -o /tmp/node.tar.xz -LO https://nodejs.org/dist/v20.12.2/node-v20.12.2-linux-x64.tar.xz
+
+RUN tar -xf /tmp/node.tar.xz -C /tmp
+
+RUN cp -r /tmp/node-v20.12.2-linux-x64/lib/*  /lib/.
+
+RUN cp -r /tmp/node-v20.12.2-linux-x64/bin/*  /bin/.
 
 RUN rm -f /tmp/node.tar.xz
 
