@@ -48,7 +48,7 @@ RUN apt-get install -y \
 
 # Install postgresql
 RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
-RUN sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ bullseye-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+RUN sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ bookworm-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
 RUN sudo apt-get update -y
 RUN sudo apt-get install postgresql-client-15 -y
 
@@ -65,6 +65,7 @@ RUN curl -o /usr/local/bin/ytt -LO https://github.com/vmware-tanzu/carvel-ytt/re
     && chmod +x /usr/local/bin/ytt
 
 # Install s3cmd
+RUN rm -rf /usr/lib/python3.11/EXTERNALLY-MANAGED
 RUN pip3 install s3cmd
 
 # Cleanup
